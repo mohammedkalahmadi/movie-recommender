@@ -1,0 +1,94 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Movie Recommendation System</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🎬</text></svg>">
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="navbar" role="navigation" aria-label="main">
+    <div class="container nav-inner">
+      <div class="brand">🎬 MovieRec</div>
+      <nav class="nav-links">
+        <a href="#how" aria-label="How it works">How it works</a>
+        <a href="#about" aria-label="About">About</a>
+        <a href="#health" aria-label="Service health" id="healthLink">Health</a>
+      </nav>
+    </div>
+  </header>
+
+  {% if not data_present %}
+  <section class="banner warning" role="alert">
+    <strong>Dataset not found.</strong>
+    Place <code>IMDB_All_Genres_etf_clean1.csv</code> in <code>./data</code> and refresh.
+  </section>
+  {% endif %}
+
+  {% if error %}
+  <section class="banner error" role="alert">
+    <strong>Error:</strong> {{ error }}
+  </section>
+  {% endif %}
+
+  <main id="main" class="container">
+    <section class="hero">
+      <h1>Movie Recommendation System</h1>
+      <p class="subtitle">Content‑based clustering using K‑Means over genres, rating, and runtime.</p>
+    </section>
+
+    <section class="card" aria-labelledby="formTitle">
+      <h2 id="formTitle">Find similar movies</h2>
+      <div class="form-row">
+        <label for="titleInput">Movie title</label>
+        <input id="titleInput" list="titles" placeholder="Start typing a title…" autocomplete="off" aria-describedby="titleHelp" />
+        <small id="titleHelp" class="help">Use the autocomplete list if unsure of spelling.</small>
+        <datalist id="titles"></datalist>
+      </div>
+
+      <div class="form-row">
+        <label for="kInput">How many recommendations?</label>
+        <input id="kInput" type="number" min="1" max="50" value="10" />
+      </div>
+
+      <div class="actions">
+        <button id="goBtn" class="btn primary" aria-live="polite">
+          <span class="btn-label">Get recommendations</span>
+          <span class="spinner" hidden aria-hidden="true"></span>
+        </button>
+        <button id="clearBtn" class="btn" aria-label="Clear results">Clear</button>
+      </div>
+    </section>
+
+    <section id="results" class="results" aria-live="polite" aria-busy="false"></section>
+
+    <section id="how" class="info">
+      <h2>How it works</h2>
+      <ol>
+        <li>We vectorize <em>main</em> and <em>side</em> genres.</li>
+        <li>We scale numeric features (rating & runtime).</li>
+        <li>We cluster with K‑Means (k=180), then recommend from the same cluster ranked by cosine similarity.</li>
+      </ol>
+    </section>
+
+    <section id="about" class="info">
+      <h2>About</h2>
+      <p>This demo is for educational use. No personal data is collected or stored.</p>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>Built with ❤ using K‑Means clustering and cosine similarity.</p>
+      <p class="muted">Keyboard shortcuts: <kbd>/</kbd> focus title • <kbd>Enter</kbd> run • <kbd>Esc</kbd> clear.</p>
+    </div>
+  </footer>
+
+  <div id="toast" role="status" aria-live="polite" class="toast" hidden></div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
