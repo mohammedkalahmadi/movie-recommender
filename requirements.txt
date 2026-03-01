@@ -4,3 +4,4 @@ numpy
 scikit-learn
 scipy
 joblib
+gunicorn>=21.2.0
